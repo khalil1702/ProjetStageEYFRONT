@@ -1,0 +1,66 @@
+<li class="nav-item" ngbDropdown>
+  <a class="nav-link dropdown-toggle" ngbDropdownToggle>
+    <i class="feather icon-user"></i>
+    <span class="arrow-down ms-1">&#x25BC;</span> <!-- ▼ flèche visible -->
+  </a>
+
+  <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end profile-notification">
+    <!-- En-tête du dropdown -->
+    <div class="pro-head d-flex align-items-center p-3">
+      <img [src]="user?.image || 'assets/images/user/avatar-1.jpg'" class="img-radius me-3" alt="Photo profil"
+        width="40" height="40">
+      <div class="flex-grow-1">
+        <h6 class="mb-0">{{ user?.nom || 'Invité' }}</h6>
+      </div>
+      <a href="javascript:void(0)" class="text-danger" (click)="logout()" title="Déconnexion">
+        <i class="feather icon-log-out"></i>
+      </a>
+    </div>
+
+    <!-- Corps du dropdown -->
+    <ul class="pro-body list-unstyled">
+      <li class="dropdown-item">
+        <i class="feather icon-mail me-2"></i>
+        <span>{{ user?.email || 'Non disponible' }}</span>
+      </li>
+      <li class="dropdown-item">
+        <i class="feather icon-shield me-2"></i>
+        <span>Rôle: {{ getRoleName(user?.role) }}</span>
+      </li>
+
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+
+      <li class="dropdown-item" (click)="openChangePasswordModal()">
+        <i class="feather icon-lock me-2"></i>
+        <span>Changer le mot de passe</span>
+      </li>
+
+    </ul>
+  </div>
+</li>
+<ng-template #changePasswordModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Changer le mot de passe</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label>Ancien mot de passe</label>
+      <input type="password" class="form-control" [(ngModel)]="oldPassword">
+    </div>
+    <div class="mb-3">
+      <label>Nouveau mot de passe</label>
+      <input type="password" class="form-control" [(ngModel)]="newPassword">
+    </div>
+    <div class="mb-3">
+      <label>Confirmer le nouveau mot de passe</label>
+      <input type="password" class="form-control" [(ngModel)]="confirmPassword">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="submitPasswordChange()">Changer</button>
+  </div>
+</ng-template>

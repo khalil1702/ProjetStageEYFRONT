@@ -1,0 +1,50 @@
+/* =====================================
+   🎨 Personnalisation des variables Bootstrap (avant import)
+===================================== */
+$primary: #3F4E6A;
+$font-family-base: 'Segoe UI', sans-serif;
+
+/* =====================================
+   📦 Import de Bootstrap
+   (doit venir après la personnalisation des variables)
+===================================== */
+@import "bootstrap/scss/bootstrap";
+
+/* =====================================
+   🔁 Fichiers de configuration (variables globales, fonctions, mixins)
+===================================== */
+@import 'scss/variables';
+
+/* =====================================
+   🔡 Fonts / Icon fonts
+===================================== */
+@import 'scss/fonts/fontawesome/scss/fontawesome';
+@import 'scss/fonts/feather/iconfont';
+
+/* =====================================
+   🔧 Fichiers de base
+===================================== */
+@import 'scss/general';
+@import 'scss/generic';
+@import 'scss/mixins/function';
+
+/* =====================================
+   📜 Éléments essentiels de l’interface
+===================================== */
+@import 'scss/menu/pc-footer.scss';
+@import 'scss/menu/menu-lite';
+
+/* =====================================
+   🎨 Éléments UI (boutons, cartes, etc.)
+===================================== */
+@import 'scss/theme-elements/theme-elements';
+
+/* =====================================
+   🔌 Plugins externes
+===================================== */
+@import 'scss/plugins/plugins';
+
+/* =====================================
+   🛠️ Personnalisation finale du thème
+===================================== */
+@import 'scss/custom';

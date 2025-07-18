@@ -1,0 +1,57 @@
+<div class="auth-wrapper">
+    <div class="auth-content">
+        <div class="auth-bg">
+            <span class="r"></span>
+            <span class="r s"></span>
+            <span class="r s"></span>
+            <span class="r"></span>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="feather icon-unlock auth-icon"></i>
+                </div>
+                <h3 class="mb-4">Connexion</h3>
+
+                <!-- Champ CIN en 8 cases -->
+                <div class="form-group">
+                    <label>Numéro CIN</label>
+                    <div class="cin-container">
+                        <input *ngFor="let box of [0,1,2,3,4,5,6,7]; let i = index" #cinInput type="text" maxlength="1"
+                            class="cin-input-box" [(ngModel)]="cinDigits[i]" (input)="onCinInput(i, $event)"
+                            (keydown)="onCinKeyDown(i, $event)" (paste)="onCinPaste($event)" name="cin-{{i}}" required>
+                    </div>
+                    <input type="hidden" [ngModel]="getFullCin()" name="cin">
+                </div>
+
+
+
+
+
+                <!-- Champ mot de passe -->
+                <div class="input-group mb-4">
+                    <input type="password" class="form-control" placeholder="Mot de passe" [(ngModel)]="password"
+                        name="password" required />
+                </div>
+
+                <!-- Checkbox -->
+                <div class="form-group text-start mb-4">
+                    <div class="checkbox checkbox-fill d-inline">
+                        <input type="checkbox" name="checkbox-fill-1" id="checkbox-fill-a1" checked />
+                        <label for="checkbox-fill-a1" class="cr">Se souvenir de moi</label>
+                    </div>
+                </div>
+
+                <!-- Bouton Connexion -->
+                <button class="btn btn-primary mb-4 w-100" (click)="onLogin()">Se connecter</button>
+
+                <!-- Liens secondaires -->
+                <p class="mb-2 text-muted">Mot de passe oublié ?</p>
+                <p class="mb-0 text-muted">
+                    Vous n'avez pas de compte ?
+                    <a [routerLink]="['/signup']">Créer un compte</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

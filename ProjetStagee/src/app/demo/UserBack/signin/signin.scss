@@ -1,0 +1,51 @@
+// CIN container limité et centré
+.cin-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 100%;
+  gap: 6px;
+  margin: 0 auto;
+}
+
+// Chaque case CIN
+.cin-input-box {
+  width: 33px;              // ↓ taille plus fine
+  height: 40px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #212529;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: #3f80ea;
+    box-shadow: 0 0 0 0.2rem rgba(63, 128, 234, 0.25);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #adb5bd;
+  }
+
+  &.filled {
+    background-color: #f8f9fa;
+    border-color: #28a745;
+  }
+
+  &.error {
+    border-color: #dc3545;
+    animation: shake 0.4s;
+  }
+}
+
+// Form group aligné à gauche
+.form-group label {
+  text-align: left;
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}

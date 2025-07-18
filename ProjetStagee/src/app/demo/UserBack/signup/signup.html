@@ -1,0 +1,78 @@
+<div class="auth-wrapper">
+    <div class="auth-content">
+        <div class="auth-bg">
+            <span class="r"></span>
+            <span class="r s"></span>
+            <span class="r s"></span>
+            <span class="r"></span>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="feather icon-user-plus auth-icon"></i>
+                </div>
+                <h3 class="mb-4">Créer un compte</h3>
+
+                <form (ngSubmit)="onRegister()">
+                    <!-- Champ Photo de profil -->
+                    <div class="form-group mb-3">
+                        <label class="form-label d-block text-start mb-2">Photo de profil</label>
+                        <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)">
+                    </div>
+
+                    <!-- (facultatif) Aperçu de l’image -->
+                    <div *ngIf="user.image" class="mb-3">
+                        <img [src]="user.image" alt="Aperçu"
+                            style="max-width: 100px; max-height: 100px; border-radius: 5px;" />
+                    </div>
+
+                    <!-- Champ CIN à 8 cases -->
+                    <div class="form-group mb-3">
+                        <label class="form-label d-block text-start mb-2">Numéro CIN</label>
+                        <div class="d-flex justify-content-center gap-2">
+                            <input *ngFor="let box of [0,1,2,3,4,5,6,7]; let i = index" #cinInput type="text"
+                                class="cin-input-box form-control text-center" maxlength="1" [(ngModel)]="cinDigits[i]"
+                                (input)="onCinInput(i, $event)" (keydown)="onCinKeyDown(i, $event)"
+                                (paste)="onCinPaste($event)" name="cin-{{i}}" required>
+                        </div>
+                        <input type="hidden" [ngModel]="getFullCin()" name="cin">
+                    </div>
+
+                    <!-- Champ Nom complet -->
+                    <div class="form-group mb-3">
+                        <label class="form-label d-block text-start mb-2">Nom complet</label>
+                        <input type="text" class="form-control" placeholder="Entrez votre nom complet"
+                            [(ngModel)]="user.nom" name="nom" required>
+                    </div>
+
+                    <!-- Champ Email -->
+                    <div class="form-group mb-3">
+                        <label class="form-label d-block text-start mb-2">Email</label>
+                        <input type="email" class="form-control" placeholder="Entrez votre email"
+                            [(ngModel)]="user.email" name="email" required>
+                    </div>
+
+                    <!-- Menu déroulant des rôles avec flèche personnalisée -->
+                    <div class="form-group mb-3 custom-select-wrapper">
+                        <label class="form-label d-block text-start mb-2">Rôle</label>
+                        <select class="form-control custom-select" [(ngModel)]="user.role" name="role" required>
+                            <option value="" disabled hidden>Choisissez votre rôle</option>
+                            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" [(ngModel)]="user.password" name="password">
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                        <i class="feather icon-user-plus me-2"></i>S'inscrire
+                    </button>
+                </form>
+
+                <p class="mb-0 text-muted">
+                    Vous avez déjà un compte ?
+                    <a [routerLink]="['/auth']" class="text-primary fw-semibold">Se connecter</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

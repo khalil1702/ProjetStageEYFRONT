@@ -1,0 +1,90 @@
+//@use 'bootstrap';
+
+.profile-notification {
+  width: 280px;
+  border: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+
+  .pro-head {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+
+    img {
+      border: 2px solid #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    a {
+      opacity: 0.7;
+      transition: opacity 0.3s;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  .dropdown-item {
+    padding: 0.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+
+    i {
+      width: 20px;
+      text-align: center;
+      margin-right: 10px;
+      color: #6c757d;
+    }
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  .dropdown-divider {
+    margin: 0.25rem 0;
+  }
+}
+
+.nav-link.dropdown-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  padding: 0.5rem;
+
+  i {
+    font-size: 1.2rem;
+  }
+
+  &::after {
+    content: "\25BC"; /* ▼ flèche */
+    font-size: 0.65rem;
+    color: #6c757d;
+    margin-top: 2px;
+  }
+}
+
+/* Supprime toute flèche auto ajoutée par Bootstrap */
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+nav ul,
+nav li,
+.sidebar ul,
+.sidebar li,
+.nav-item,
+.navbar-nav li {
+  list-style: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.arrow-down {
+  font-size: 0.65rem;
+  color: #6c757d;
+  margin-top: 2px;
+}
