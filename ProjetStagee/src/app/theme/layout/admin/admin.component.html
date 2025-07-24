@@ -12,9 +12,12 @@
   <div class="pcoded-wrapper">
     <div class="pcoded-content">
       <div class="pcoded-inner-content">
-        <app-breadcrumb />
+        <!-- Déplacement du breadcrumb juste avant le router-outlet -->
         <div class="main-body">
           <div class="page-wrapper">
+            <div class="breadcrumb-container">  <!-- Conteneur ajouté pour un meilleur contrôle -->
+              <app-breadcrumb class="mb-3" />  <!-- mb-3 pour un petit espace en dessous -->
+            </div>
             <router-outlet />
           </div>
         </div>

@@ -4,12 +4,12 @@ export class Interventionn {
   date!: Date;
   description!: string;
   typeIntervention!: TypeIntervention;
-equipement: any;
- 
+  equipement: any;
+
 }
 
 
-  export enum TypeIntervention {
+export enum TypeIntervention {
   MAINTENANCE_PREVENTIVE = 'MAINTENANCE_PREVENTIVE',
   MAINTENANCE_CURATIVE = 'MAINTENANCE_CURATIVE'
 }

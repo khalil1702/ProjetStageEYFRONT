@@ -11,73 +11,76 @@ export interface NavigationItem {
   external?: boolean;
   target?: boolean;
   breadcrumbs?: boolean;
-
   children?: NavigationItem[];
 }
+
 export const NavigationItems: NavigationItem[] = [
   {
     id: 'navigation',
-    title: 'Navigation',
+    title: 'Navigation Principale',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'feather icon-compass',
     children: [
       {
         id: 'dashboard',
-        title: 'Dashboard',
+        title: 'Tableau de Bord',
         type: 'item',
-        url: '/dashboardd',
-        icon: 'feather icon-home',
-        classes: 'nav-item'
+        url: '/dashboardd', // Gardé tel quel comme dans votre original
+        icon: 'feather icon-pie-chart',
+        classes: 'nav-item',
+        breadcrumbs: true
       }
     ]
   },
   
   {
     id: 'equipements',
-    title: 'Equipements',
+    title: 'Gestion des Équipements',
     type: 'group',
-    icon: 'icon-group',
+    icon: 'feather icon-cpu',
     children: [
       {
         id: 'equipements',
-        title: 'Equipements ',
+        title: 'Inventaire des Équipements',
         type: 'item',
-        url: '/equipements',
+        url: '/equipements', // URL originale conservée
         classes: 'nav-item',
         icon: 'feather icon-server'
-      }]
-  },
-   {
-    id: 'ListeUsers',
-    title: 'ListeUsers',
-    type: 'group',
-    icon: 'icon-group',
-    children: [
-      {
-        id: 'ListeUsers',
-        title: 'Liste des utlisateurs ',
-        type: 'item',
-        url: '/listeusers',
-        classes: 'nav-item',
-        icon: 'feather icon-server'
-      }]
+      }
+    ]
   },
   
-   {
-    id: 'Interventions',
-    title: 'Interventions',
+  {
+    id: 'utilisateurs',
+    title: 'Gestion du Personnel',
     type: 'group',
-    icon: 'icon-group',
+    icon: 'feather icon-users',
     children: [
       {
-        id: 'ListeUsers',
-        title: 'Historique des interventions ',
+        id: 'liste-utilisateurs',
+        title: 'Gestion des Utilisateurs',
         type: 'item',
-        url: '/interventions',
+        url: '/listeusers', // URL originale conservée
         classes: 'nav-item',
-        icon: 'feather icon-server'
-      }]
+        icon: 'feather icon-user-check'
+      }
+    ]
+  },
+  
+  {
+    id: 'interventions',
+    title: 'Suivi des Interventions',
+    type: 'group',
+    icon: 'feather icon-clipboard',
+    children: [
+      {
+        id: 'historique-interventions',
+        title: 'Journal des Interventions',
+        type: 'item',
+        url: '/interventions', // URL originale conservée
+        classes: 'nav-item',
+        icon: 'feather icon-activity'
+      }
+    ]
   }
-     
-  
 ];

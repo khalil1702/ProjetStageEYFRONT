@@ -1,7 +1,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <div class="card shadow-sm mb-4">
     <div class="card-header">
-        <h2 class="mb-0">📋 Historique des Interventions</h2>
+        <h3 class="mb-0">
+            <i class="feather icon-clipboard "></i> Historique des Interventions
+        </h3>
     </div>
 
     <div class="card-body">
@@ -17,108 +19,142 @@
                         (input)="filterInterventions()" />
                 </div>
             </div>
-            </div>
-            <!-- Table -->
-            <div class="table-responsive">
-                <table class="table table-hover align-middle text-center">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Nom de L'equipement</th>
-                            <th>Description</th>
-                            <th>Type</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let i of filteredInterventions | paginate: { itemsPerPage, currentPage: p }">
-                            <td class="text-start">
-                                {{ i.equipement?.nom }}
-                            </td>
-                            <td class="text-start">
-                                {{ i.description }}
-                            </td>
-                            <td>
-                                <span class="badge" [ngClass]="{
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nom de L'equipement</th>
+                        <th>Description de l'intervention</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of filteredInterventions | paginate: { itemsPerPage, currentPage: p }">
+                        <td class="text-start">
+                            {{ i.equipement?.nom }}
+                        </td>
+                        <td class="text-start">
+                            {{ i.description }}
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="{
                       'bg-primary': i.typeIntervention === 'MAINTENANCE_PREVENTIVE',
                       'bg-warning': i.typeIntervention === 'MAINTENANCE_CURATIVE'
                     }">
-                                    {{ i.typeIntervention.replace('_', ' ') }}
-                                </span>
-                            </td>
-                            <td>{{ i.date | date:'dd/MM/yyyy' }}</td>
-                            <td>
-                                <div class="btn-group">
-                                    <button class="btn btn-sm btn-outline-primary" (click)="openEditModal(i)">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" (click)="deleteIntervention(i.id)">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr *ngIf="filteredInterventions.length === 0">
-                            <td colspan="4" class="text-muted text-center p-4">
-                                <i class="bi bi-emoji-frown display-6 mb-2"></i><br> Aucune intervention trouvée
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                {{ i.typeIntervention.replace('_', ' ') }}
+                            </span>
+                        </td>
+                        <td>{{ i.date | date:'dd/MM/yyyy' }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary" (click)="openEditModal(i)">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" (click)="deleteIntervention(i.id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filteredInterventions.length === 0">
+                        <td colspan="4" class="text-muted text-center p-4">
+                            <i class="bi bi-emoji-frown display-6 mb-2"></i><br> Aucune intervention trouvée
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-            <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <small class="text-muted">
-                    Affichage de {{ getMathMin(p * itemsPerPage - itemsPerPage + 1, filteredInterventions.length) }}
-                    à {{ getMathMin(p * itemsPerPage, filteredInterventions.length) }} sur {{
-                    filteredInterventions.length
-                    }} interventions
-                </small>
-                <pagination-controls (pageChange)="p = $event" previousLabel="Précédent" nextLabel="Suivant"
-                    class="pagination justify-content-end"></pagination-controls>
-            </div>
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <small class="text-muted">
+                Affichage de {{ getMathMin(p * itemsPerPage - itemsPerPage + 1, filteredInterventions.length) }}
+                à {{ getMathMin(p * itemsPerPage, filteredInterventions.length) }} sur {{
+                filteredInterventions.length
+                }} interventions
+            </small>
+            <pagination-controls (pageChange)="p = $event" previousLabel="Précédent" nextLabel="Suivant"
+                class="pagination justify-content-end"></pagination-controls>
         </div>
     </div>
+</div>
 
-    <!-- MODAL -->
-    <div class="modal fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow-lg border-0">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">
-                        ✏️ Modifier Intervention - {{ editingIntervention?.equipement?.nom || 'Équipement inconnu' }}
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" (click)="closeEditModal()"></button>
+
+<!-- MODAL -->
+<!-- MODAL EDIT -->
+<div class="modal fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg">
+            <!-- En-tête de la modal -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fs-5" id="editModalLabel">
+                    <i class="bi bi-pencil-square me-2"></i>
+                    Modification Intervention - {{ editingIntervention?.equipement?.nom || 'Nouvelle intervention' }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" (click)="closeEditModal()" aria-label="Fermer"></button>
+            </div>
+
+            <!-- Corps de la modal -->
+            <form [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
+                <div class="modal-body p-4">
+                    <!-- Section Équipement (lecture seule) -->
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <h6 class="fw-bold mb-3">Équipement concerné</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Nom:</strong> {{ editingIntervention?.equipement?.nom || '-' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Localisation:</strong> {{ editingIntervention?.equipement?.localisation || '-' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Champs éditables -->
+                    <div class="row g-3">
+                        <!-- Type d'intervention -->
+                        <div class="col-md-6">
+                            <label for="typeIntervention" class="form-label fw-bold">Type d'intervention</label>
+                            <select id="typeIntervention" class="form-select" formControlName="typeIntervention">
+                                <option *ngFor="let type of typeOptions" [value]="type">
+                                    {{ type.replace('_', ' ') | titlecase }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="col-md-6">
+                            <label for="dateIntervention" class="form-label fw-bold">Date</label>
+                            <input id="dateIntervention" type="date" class="form-control" formControlName="dateIntervention">
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label for="description" class="form-label fw-bold">Description</label>
+                            <textarea id="description" class="form-control" rows="5" formControlName="description"
+                                placeholder="Décrivez en détail l'intervention effectuée..."></textarea>
+                        </div>
+                    </div>
                 </div>
 
-                <form [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Description</label>
-                            <textarea class="form-control" rows="3" formControlName="description"></textarea>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Type</label>
-                                <select class="form-select" formControlName="typeIntervention">
-                                    <option *ngFor="let type of typeOptions" [value]="type">{{ type.replace('_', ' ') }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Date</label>
-                                <input type="date" class="form-control" formControlName="dateIntervention">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary"
-                            (click)="closeEditModal()">Annuler</button>
-                        <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">💾
-                            Enregistrer</button>
-                    </div>
-                </form>
-            </div>
+                <!-- Pied de la modal -->
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary" (click)="closeEditModal()">
+                        <i class="bi bi-x-circle me-1"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">
+                        <i class="bi bi-check-circle me-1"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+<!-- Overlay de fond -->
+<div class="modal-backdrop fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'"></div>

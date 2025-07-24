@@ -1,8 +1,7 @@
-// Angular import
 import { Component, OnInit, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser'; // ✅ Import ici
 
-// project import
 import { SpinnerComponent } from './theme/shared/components/spinner/spinner.component';
 
 @Component({
@@ -13,15 +12,15 @@ import { SpinnerComponent } from './theme/shared/components/spinner/spinner.comp
 })
 export class AppComponent implements OnInit {
   private router = inject(Router);
+  private titleService = inject(Title); // ✅ Injection du service Title
 
   title = 'datta-able';
 
-  // life cycle hook
   ngOnInit() {
+    this.titleService.setTitle('Dashboard | EY Medical'); // ✅ Titre global
+
     this.router.events.subscribe((evt) => {
-      if (!(evt instanceof NavigationEnd)) {
-        return;
-      }
+      if (!(evt instanceof NavigationEnd)) return;
       window.scrollTo(0, 0);
     });
   }

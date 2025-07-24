@@ -11,7 +11,8 @@ export class Equipement {
     dateMiseEnService!: Date;
     dateProchaineMaintenance!: Date;
     image!: string;
-
+    modele!: string;
+    dateAcquisition!: string;
 }
 
 export enum Etat {

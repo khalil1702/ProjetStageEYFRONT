@@ -29,7 +29,7 @@ export class InterventionBack implements OnInit {
   constructor(
     private interventionService: InterventionService,
     private fb: FormBuilder
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadInterventions();
@@ -62,10 +62,16 @@ export class InterventionBack implements OnInit {
 
   openEditModal(intervention: Interventionn): void {
     this.editingIntervention = intervention;
+
+    // Conversion correcte pour l'input date
+    const dateValue = new Date(intervention.date);
+    const localDate = new Date(dateValue.getTime() - dateValue.getTimezoneOffset() * 60000);
+    const formattedDate = localDate.toISOString().split('T')[0];
+
     this.editForm.patchValue({
       description: intervention.description,
       typeIntervention: intervention.typeIntervention,
-      dateIntervention: new Date(intervention.date).toISOString().substring(0, 10)
+      dateIntervention: formattedDate
     });
     this.showEditModal = true;
   }
@@ -78,9 +84,18 @@ export class InterventionBack implements OnInit {
   onEditSubmit(): void {
     if (this.editForm.invalid || !this.editingIntervention) return;
 
+    const formValue = this.editForm.value;
+
+    // Crée un nouvel objet Date en tenant compte du décalage horaire
+    const dateObj = new Date(formValue.dateIntervention);
+    const tzOffset = dateObj.getTimezoneOffset() * 60000;
+    const correctedDate = new Date(dateObj.getTime() + tzOffset);
+
     const updated: Interventionn = {
       ...this.editingIntervention,
-      ...this.editForm.value
+      description: formValue.description,
+      typeIntervention: formValue.typeIntervention,
+      date: correctedDate
     };
 
     this.interventionService.updateIntervention(this.editingIntervention.id, updated).subscribe({
@@ -89,7 +104,10 @@ export class InterventionBack implements OnInit {
         this.loadInterventions();
         this.closeEditModal();
       },
-      error: err => Swal.fire('Erreur', 'Erreur lors de la modification', 'error')
+      error: err => {
+        console.error('Erreur détaillée:', err);
+        Swal.fire('Erreur', 'Erreur lors de la modification', 'error');
+      }
     });
   }
 

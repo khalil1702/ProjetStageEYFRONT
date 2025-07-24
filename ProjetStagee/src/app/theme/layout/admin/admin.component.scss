@@ -1,0 +1,11 @@
+.breadcrumb-container {
+  padding: 0 15px; /* Ajustez selon votre layout */
+  margin-top: -70px;
+}
+
+/* Si vous utilisez Angular Material */
+.mat-breadcrumb {
+  font-size: 14px;
+  background-color: transparent;
+  padding: 0;
+}

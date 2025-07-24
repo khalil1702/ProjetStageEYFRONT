@@ -58,6 +58,8 @@ export class EquipementBack implements OnInit {
       serviceAffecte: ['', Validators.required],
       dateMiseEnService: ['', Validators.required],
       dateProchaineMaintenance: ['', Validators.required],
+      modele: ['', Validators.required],
+      dateAcquisition: ['', Validators.required],
       image: ['']
     });
 
@@ -93,6 +95,8 @@ export class EquipementBack implements OnInit {
       e.localisation.toLowerCase().includes(term) ||
       e.categorie.toLowerCase().includes(term) ||
       e.fournisseur.toLowerCase().includes(term) ||
+      e.modele.toLowerCase().includes(term) ||
+      e.dateAcquisition.toLowerCase().includes(term) ||
       e.serviceAffecte.toLowerCase().includes(term)
     );
   }
@@ -157,6 +161,8 @@ export class EquipementBack implements OnInit {
       serviceAffecte: e.serviceAffecte,
       dateMiseEnService: e.dateMiseEnService,
       dateProchaineMaintenance: e.dateProchaineMaintenance,
+      modele: e.modele,
+      dateAcquisition: e.dateAcquisition
     });
   }
 

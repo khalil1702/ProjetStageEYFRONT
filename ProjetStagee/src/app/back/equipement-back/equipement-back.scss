@@ -163,33 +163,9 @@
   color: #495057;
 }
 
-/* Boutons */
-.btn {
-  padding: 0.5rem 1.25rem;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
 
-.btn-primary {
-  background-color: #2A3042;
-  border-color: #2A3042;
-}
 
-.btn-primary:hover {
-  background-color: #5d6165;
-  border-color: #2A3042;
-}
 
-.btn-outline-secondary {
-  color: #6c757d;
-  border-color: #6c757d;
-}
-
-.btn-outline-secondary:hover {
-  background-color: #6c757d;
-  color: white;
-}
 
 /* Avatar */
 .avatar {
@@ -288,39 +264,33 @@ select {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-/* Bouton Modifier (édition) */
-.btn-primary {
-  background-color: #007bff;
-  border: none;
+.btn-outline-primary, .btn-outline-danger {
+  border-radius: 30px;
+  transition: all 0.3s;
+}
+
+.btn-outline-primary:hover {
+  background-color: #3F4E6A;
   color: white;
-  padding: 4px 10px;
-  font-size: 0.9rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
-  cursor: pointer;
-}
-
-/* Bouton Supprimer (danger) */
-.btn-danger {
+.btn-outline-danger:hover {
   background-color: #dc3545;
-  border: none;
   color: white;
-  padding: 4px 10px;
-  font-size: 0.9rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
 }
 
-.btn-danger:hover {
-  background-color: #a71d2a;
-  cursor: pointer;
+
+/* Ajoutez ceci à votre fichier CSS */
+.modal-body .form-label {
+  text-align: left;
+  display: block;
 }
-.btn-primary:hover {
-  cursor: pointer;
-  background-color: #5d6165;
-  border-color: #2A3042;
+
+.modal-body .form-control, 
+.modal-body .form-select {
+  text-align: left;
+}
+
+.row.g-3 {
+  justify-content: flex-start;
 }

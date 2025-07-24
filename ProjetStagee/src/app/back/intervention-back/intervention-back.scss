@@ -4,7 +4,12 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
+.card-header h3 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #fcfcfc;
 
+}
 
 
 .card-header {
@@ -41,7 +46,7 @@
 }
 
 .btn-outline-primary:hover {
-  background-color: #007bff;
+  background-color: #3F4E6A;
   color: white;
 }
 
@@ -51,8 +56,8 @@
 }
 
 .pagination {
-  --bs-pagination-active-bg: #007bff;
-  --bs-pagination-active-border-color: #007bff;
+  --bs-pagination-active-bg: #3F4E6A;
+  --bs-pagination-active-border-color: #3F4E6A;
 }
 
 .modal-content {
@@ -75,40 +80,23 @@
   overflow: hidden;
 }
 
-/* L’icône (input-group-text) */
+
+/* Input group */
 .input-group-text {
-  background-color: #e9f2ff; /* couleur très claire bleu */
-  color: #007bff; /* bleu primaire */
-  border: none;
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: #f8f9fa;
+  border-right: none;
 }
 
-/* Champ de saisie */
-.input-group-lg input.form-control {
-  border: none;
-  padding: 0.75rem 1rem;
-  font-size: 1.1rem;
-  color: #2A3042;
+.input-group input {
+  border-left: none;
 }
 
-.input-group-lg input.form-control::placeholder {
-  color: #6c757d;
-  font-style: italic;
-}
-
-/* Focus sur le champ input */
-.input-group-lg input.form-control:focus {
+.input-group input:focus {
   box-shadow: none;
-  outline: none;
-  background-color: #f0f8ff;
+  border-color: #ced4da;
 }
-
-/* Animation légère au survol */
-.input-group-lg:hover {
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
-  transition: box-shadow 0.3s ease;
+.blur-background {
+  filter: blur(5px);
+  pointer-events: none;
+  user-select: none;
 }
-
