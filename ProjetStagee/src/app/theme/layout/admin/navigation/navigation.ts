@@ -32,7 +32,7 @@ export const NavigationItems: NavigationItem[] = [
       }
     ]
   },
-  
+
   {
     id: 'equipements',
     title: 'Gestion des Équipements',
@@ -49,7 +49,42 @@ export const NavigationItems: NavigationItem[] = [
       }
     ]
   },
-  
+
+  {
+    id: 'interventionsUrgente',
+    title: 'Intervention urgente',
+    type: 'group',
+    icon: 'feather icon-clipboard',
+    children: [
+      {
+        id: 'Interventions',
+        title: 'Interventions urgentes',
+        type: 'item',
+        url: '/interventionsUrgente',
+        classes: 'nav-item text-danger fw-bold',
+        icon: 'feather icon-alert-triangle'
+      }
+    ]
+  },
+
+  {
+    id: 'interventions',
+    title: 'Suivi des Interventions',
+    type: 'group',
+    icon: 'feather icon-clipboard',
+    children: [
+      {
+        id: 'historique-interventions',
+        title: 'Journal des Interventions',
+        type: 'item',
+        url: '/interventions', // URL originale conservée
+        classes: 'nav-item',
+        icon: 'feather icon-activity'
+      }
+    ]
+  },
+
+
   {
     id: 'utilisateurs',
     title: 'Gestion du Personnel',
@@ -66,21 +101,4 @@ export const NavigationItems: NavigationItem[] = [
       }
     ]
   },
-  
-  {
-    id: 'interventions',
-    title: 'Suivi des Interventions',
-    type: 'group',
-    icon: 'feather icon-clipboard',
-    children: [
-      {
-        id: 'historique-interventions',
-        title: 'Journal des Interventions',
-        type: 'item',
-        url: '/interventions', // URL originale conservée
-        classes: 'nav-item',
-        icon: 'feather icon-activity'
-      }
-    ]
-  }
 ];

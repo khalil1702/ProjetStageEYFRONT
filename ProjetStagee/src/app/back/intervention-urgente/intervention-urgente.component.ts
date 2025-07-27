@@ -9,13 +9,13 @@ import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
-  selector: 'app-equipement-back',
-  templateUrl: './equipement-back.html',
-  styleUrls: ['./equipement-back.scss'],
+  selector: 'app-intervention-urgente',
+  templateUrl: './intervention-urgente.component.html',
+  styleUrl: './intervention-urgente.component.scss',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxPaginationModule]
 })
-export class EquipementBack implements OnInit {
+export class  InterventionUrgenteComponent implements OnInit {
   equipements: Equipement[] = [];
   filteredEquipements: Equipement[] = [];
   form!: FormGroup;
@@ -71,36 +71,35 @@ export class EquipementBack implements OnInit {
     });
   }
 
-  loadEquipements(): void {
-    this.equipementService.getAllEquipements().subscribe({
-      next: async data => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+loadEquipements(): void {
+  this.equipementService.getAllEquipements().subscribe({
+    next: async data => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-        const updateObservables = [];
+      const updateObservables = [];
 
-        this.equipements = data.map(e => {
-          const maintenanceDate = new Date(e.dateProchaineMaintenance);
-          maintenanceDate.setHours(0, 0, 0, 0);
+      // Mettre à jour l'état si la date de maintenance est aujourd'hui ou déjà passée
+      data.forEach(e => {
+        const maintenanceDate = new Date(e.dateProchaineMaintenance);
+        maintenanceDate.setHours(0, 0, 0, 0);
 
-          if (maintenanceDate <= today && e.etat !== Etat.EN_MAINTENANCE) {
-            console.log(`⚠️ Mise à jour : ${e.nom} => EN_MAINTENANCE`);
-            e.etat = Etat.EN_MAINTENANCE;
-            updateObservables.push(this.equipementService.updateEquipement(e));
-          }
-
-          return e;
-        });
-
-        if (updateObservables.length > 0) {
-          await Promise.all(updateObservables.map(obs => obs.toPromise()));
+        if (maintenanceDate <= today && e.etat !== Etat.EN_MAINTENANCE) {
+          e.etat = Etat.EN_MAINTENANCE;
+          updateObservables.push(this.equipementService.updateEquipement(e));
         }
+      });
 
-        this.filteredEquipements = [...this.equipements];
-      },
-      error: err => console.error('Erreur chargement équipements', err)
-    });
-  }
+      if (updateObservables.length > 0) {
+        await Promise.all(updateObservables.map(obs => obs.toPromise()));
+      }
+
+      this.equipements = data.filter(e => e.etat === Etat.EN_MAINTENANCE);
+      this.filteredEquipements = [...this.equipements];
+    },
+    error: err => console.error('Erreur chargement équipements', err)
+  });
+}
 
 
   filterEquipements(): void {
@@ -286,3 +285,4 @@ export class EquipementBack implements OnInit {
     });
   }
 }
+

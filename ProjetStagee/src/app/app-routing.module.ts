@@ -56,6 +56,10 @@ const routes: Routes = [
       {
         path: 'interventions',
         loadComponent: () => import('./back/intervention-back/intervention-back').then(m => m.InterventionBack)
+      },
+       {
+        path: 'interventionsUrgente',
+        loadComponent: () => import('./back/intervention-urgente/intervention-urgente.component').then(m => m.InterventionUrgenteComponent)
       }
 
 

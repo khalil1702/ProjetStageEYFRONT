@@ -1,0 +1,291 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="container-fluid py-4" style="text-align: center; margin-top: -25px;">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0 text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Interventions urgentes
+                </h3>
+
+
+                <div>
+                    <button class="btn btn-light me-2" (click)="openModal()">
+                        <i class="fas fa-plus me-1"></i> Ajouter un équipement
+                    </button>
+                    <button class="btn btn-light me-2" [disabled]="!selectedEquipement"
+                        (click)="openInterventionModal()">
+                        <i class="fas fa-plus me-1"></i> Intervention
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Rechercher..." [(ngModel)]="searchTerm"
+                            (input)="filterEquipements()" />
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center justify-content-end">
+                    <div class="form-group mb-0">
+                        <select class="form-select" [(ngModel)]="itemsPerPage">
+                            <option value="5">5 éléments/page</option>
+                            <option value="10">10 éléments/page</option>
+                            <option value="20">20 éléments/page</option>
+                            <option value="50">50 éléments/page</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th (click)="sortTable('nom')" class="cursor-pointer">
+                                Nom <i class="fas fa-sort ms-1"></i>
+                            </th>
+                            <th (click)="sortTable('etat')" class="cursor-pointer">
+                                État <i class="fas fa-sort ms-1"></i>
+                            </th>
+                            <th>Type</th>
+                            <th>Localisation</th>
+                            <th>Catégorie</th>
+                            <th>Fournisseur</th>
+                            <th>Service Affecté</th>
+                            <th>Modèle</th>
+                            <th>Date d'acquisition</th>
+                            <th>Mise en service</th>
+                            <th>Prochaine maintenance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let e of filteredEquipements | paginate: { itemsPerPage: itemsPerPage, currentPage: p }"
+                            class="hover-effect" [class.table-active]="selectedEquipement?.id === e.id"
+                            (click)="selectEquipement(e)">
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm me-2">
+                                        <img *ngIf="e.image" [src]="e.image" class="rounded-circle"
+                                            alt="Image équipement" />
+                                        <div *ngIf="!e.image"
+                                            class="avatar-initial bg-secondary rounded-circle text-white">
+                                            {{ e.nom.charAt(0) }}
+                                        </div>
+                                    </div>
+                                    <span>{{ e.nom }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge" [ngClass]="getEtatClass(e.etat)">{{ e.etat }}</span>
+                            </td>
+                            <td>{{ e.type }}</td>
+                            <td>{{ e.localisation }}</td>
+                            <td>{{ e.categorie }}</td>
+                            <td>{{ e.fournisseur }}</td>
+                            <td>{{ e.serviceAffecte }}</td>
+                            <td>{{ e.modele }}</td>
+                            <td>{{ e.dateAcquisition | date: 'dd/MM/yyyy'}}</td>
+                            <td>{{ e.dateMiseEnService | date: 'dd/MM/yyyy' }}</td>
+                            <td>
+                                <span [ngClass]="{ 'text-danger': isMaintenanceDue(e.dateProchaineMaintenance) }">
+                                    {{ e.dateProchaineMaintenance | date: 'dd/MM/yyyy' }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        (click)="editEquipement(e); $event.stopPropagation()" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                        (click)="deleteEquipement(e.id); $event.stopPropagation()" title="Supprimer">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="filteredEquipements.length === 0">
+                            <td colspan="10" class="text-center py-4 text-muted">Aucun équipement trouvé</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="text-muted">
+                    Affichage de {{ (p - 1) * itemsPerPage + 1 }} à
+                    {{ getMathMin(p * itemsPerPage, filteredEquipements.length) }} sur
+                    {{ filteredEquipements.length }} équipements
+                </div>
+                <pagination-controls (pageChange)="p = $event" previousLabel="Précédent" nextLabel="Suivant"
+                    class="custom-pagination"></pagination-controls>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Équipement -->
+    <div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus-circle me-2"></i> un nouvel équipement
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="nom" class="form-label">Nom de l'équipement</label>
+                                <input id="nom" type="text" class="form-control" formControlName="nom"
+                                    placeholder="Ex: Serveur Dell R740" required />
+                                <div *ngIf="form.get('nom')?.invalid && form.get('nom')?.touched"
+                                    class="text-danger small">
+                                    Ce champ est requis
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="etat" class="form-label">État</label>
+                                <select id="etat" class="form-select" formControlName="etat" required>
+                                    <option value="" disabled>Choisir l'état</option>
+                                    <option *ngFor="let et of etats" [value]="et">{{ et }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="type" class="form-label">Type</label>
+                                <input id="type" type="text" class="form-control" formControlName="type"
+                                    placeholder="Ex: Serveur, Ordinateur, Imprimante" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="localisation" class="form-label">Localisation</label>
+                                <input id="localisation" type="text" class="form-control" formControlName="localisation"
+                                    placeholder="Ex: Bâtiment A, Salle 203" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="categorie" class="form-label">Catégorie</label>
+                                <input id="categorie" type="text" class="form-control" formControlName="categorie"
+                                    placeholder="Ex: Informatique, Réseau" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="fournisseur" class="form-label">Fournisseur</label>
+                                <input id="fournisseur" type="text" class="form-control" formControlName="fournisseur"
+                                    placeholder="Ex: Dell, HP, Lenovo" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="serviceAffecte" class="form-label">Service Affecté</label>
+                                <input id="serviceAffecte" type="text" class="form-control"
+                                    formControlName="serviceAffecte" placeholder="Ex: IT, Comptabilité" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modele" class="form-label">Modèle</label>
+                                <input id="modele" type="text" class="form-control" formControlName="modele"
+                                    placeholder="Ex: ThinkPad T14" required />
+                                <div *ngIf="form.get('modele')?.invalid && form.get('modele')?.touched"
+                                    class="text-danger small">
+                                    Ce champ est requis
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="dateAcquisition" class="form-label">Date d'acquisition</label>
+                                <input id="dateAcquisition" type="date" class="form-control"
+                                    formControlName="dateAcquisition" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="dateMiseEnService" class="form-label">Date Mise en Service</label>
+                                <input id="dateMiseEnService" type="date" class="form-control"
+                                    formControlName="dateMiseEnService" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="dateProchaineMaintenance" class="form-label">Date Prochaine
+                                    Maintenance</label>
+                                <input id="dateProchaineMaintenance" type="date" class="form-control"
+                                    formControlName="dateProchaineMaintenance" required />
+                            </div>
+                        </div>
+
+                        <div class="modal-footer border-0 pt-4">
+                            <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">
+                                <i class="fas fa-times me-1"></i> Annuler
+                            </button>
+                            <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+                                <i class="fas fa-save me-1"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'"></div>
+
+    <!-- Modal Intervention -->
+    <div class="modal fade" [class.show]="showInterventionModal"
+        [style.display]="showInterventionModal ? 'block' : 'none'">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-tools me-2"></i> Ajouter une intervention
+                        <span *ngIf="selectedEquipement">pour {{ selectedEquipement.nom }}</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="closeInterventionModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="interventionForm" (ngSubmit)="onInterventionSubmit()">
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Date</label>
+                            <input id="date" type="date" class="form-control" formControlName="date" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea id="description" class="form-control" formControlName="description" rows="3"
+                                required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="typeIntervention" class="form-label">Type d'intervention</label>
+                            <select id="typeIntervention" class="form-select" formControlName="typeIntervention"
+                                required>
+                                <option value="" disabled>Choisir un type</option>
+                                <option value="MAINTENANCE_PREVENTIVE">Maintenance Préventive</option>
+                                <option value="MAINTENANCE_CURATIVE">Maintenance Curative</option>
+                            </select>
+                        </div>
+
+                        <div class="modal-footer border-0 pt-4">
+                            <button type="button" class="btn btn-outline-secondary" (click)="closeInterventionModal()">
+                                <i class="fas fa-times me-1"></i> Annuler
+                            </button>
+                            <button type="submit" class="btn btn-primary" [disabled]="interventionForm.invalid">
+                                <i class="fas fa-save me-1"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade" [class.show]="showInterventionModal"
+        [style.display]="showInterventionModal ? 'block' : 'none'"></div>
+</div>

@@ -21,6 +21,11 @@ export class NavRightComponent implements OnInit {
   oldPassword: string = '';
   newPassword: string = '';
   confirmPassword: string = '';
+  notifications = [
+    { message: 'Maintenance urgente pour MRI-3001', date: new Date() },
+    { message: 'Intervention nécessaire sur scanner CT-45', date: new Date() },
+    // ... peut être rempli depuis une API aussi
+  ];
 
   constructor(
     config: NgbDropdownConfig,

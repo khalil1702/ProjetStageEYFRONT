@@ -1,66 +1,90 @@
-<li class="nav-item" ngbDropdown>
-  <a class="nav-link dropdown-toggle" ngbDropdownToggle>
-    <i class="feather icon-user"></i>
-    <span class="arrow-down ms-1">&#x25BC;</span> <!-- ▼ flèche visible -->
-  </a>
-
-  <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end profile-notification">
-    <!-- En-tête du dropdown -->
-    <div class="pro-head d-flex align-items-center p-3">
-      <img [src]="user?.image || 'assets/images/user/avatar-1.jpg'" class="img-radius me-3" alt="Photo profil"
-        width="40" height="40">
-      <div class="flex-grow-1">
-        <h6 class="mb-0">{{ user?.nom || 'Invité' }}</h6>
+<ul class="navbar-nav ms-auto d-flex align-items-center">
+  <!-- Notifications -->
+  <li class="nav-item notifications-dropdown" ngbDropdown>
+    <a class="nav-link position-relative" ngbDropdownToggle>
+      <i class="feather icon-bell"></i>
+      <span *ngIf="notifications.length > 0" class="badge bg-danger rounded-circle">
+        {{ notifications.length }}
+      </span>
+    </a>
+    <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end p-0">
+      <div class="p-3 border-bottom fw-bold">Notifications</div>
+      <div *ngIf="notifications.length === 0" class="p-3 text-muted text-center">Aucune notification</div>
+      <div *ngFor="let notif of notifications" class="dropdown-item small py-2 px-3 border-bottom">
+        <div class="d-flex justify-content-between">
+          <div><i class="feather icon-alert-triangle text-warning me-2"></i> {{ notif.message }}</div>
+          <small class="text-muted">{{ notif.date | date:'short' }}</small>
+        </div>
       </div>
-      <a href="javascript:void(0)" class="text-danger" (click)="logout()" title="Déconnexion">
-        <i class="feather icon-log-out"></i>
-      </a>
+      <div class="dropdown-footer text-center p-2">
+        <a href="/interventionsUrgente" class="text-primary small">Voir toutes les interventions urgentes</a>
+      </div>
     </div>
+  </li>
+  <li class="nav-item" ngbDropdown>
+    <a class="nav-link dropdown-toggle" ngbDropdownToggle>
+      <i class="feather icon-user"></i>
+      <span class="arrow-down ms-1">&#x25BC;</span> <!-- ▼ flèche visible -->
+    </a>
 
-    <!-- Corps du dropdown -->
-    <ul class="pro-body list-unstyled">
-      <li class="dropdown-item">
-        <i class="feather icon-mail me-2"></i>
-        <span>{{ user?.email || 'Non disponible' }}</span>
-      </li>
-      <li class="dropdown-item">
-        <i class="feather icon-shield me-2"></i>
-        <span>Rôle: {{ getRoleName(user?.role) }}</span>
-      </li>
+    <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end profile-notification">
+      <!-- En-tête du dropdown -->
+      <div class="pro-head d-flex align-items-center p-3">
+        <img [src]="user?.image || 'assets/images/user/avatar-1.jpg'" class="img-radius me-3" alt="Photo profil"
+          width="40" height="40">
+        <div class="flex-grow-1">
+          <h6 class="mb-0">{{ user?.nom || 'Invité' }}</h6>
+        </div>
+        <a href="javascript:void(0)" class="text-danger" (click)="logout()" title="Déconnexion">
+          <i class="feather icon-log-out"></i>
+        </a>
+      </div>
 
-      <li>
-        <hr class="dropdown-divider">
-      </li>
+      <!-- Corps du dropdown -->
+      <ul class="pro-body list-unstyled">
+        <li class="dropdown-item">
+          <i class="feather icon-mail me-2"></i>
+          <span>{{ user?.email || 'Non disponible' }}</span>
+        </li>
+        <li class="dropdown-item">
+          <i class="feather icon-shield me-2"></i>
+          <span>Rôle: {{ getRoleName(user?.role) }}</span>
+        </li>
 
-      <li class="dropdown-item" (click)="openChangePasswordModal()">
-        <i class="feather icon-lock me-2"></i>
-        <span>Changer le mot de passe</span>
-      </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
 
-    </ul>
-  </div>
-</li>
-<ng-template #changePasswordModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">Changer le mot de passe</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-  </div>
-  <div class="modal-body">
-    <div class="mb-3">
-      <label>Ancien mot de passe</label>
-      <input type="password" class="form-control" [(ngModel)]="oldPassword">
+        <li class="dropdown-item" (click)="openChangePasswordModal()">
+          <i class="feather icon-lock me-2"></i>
+          <span>Changer le mot de passe</span>
+        </li>
+
+      </ul>
     </div>
-    <div class="mb-3">
-      <label>Nouveau mot de passe</label>
-      <input type="password" class="form-control" [(ngModel)]="newPassword">
+  </li>
+
+  <ng-template #changePasswordModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Changer le mot de passe</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
-    <div class="mb-3">
-      <label>Confirmer le nouveau mot de passe</label>
-      <input type="password" class="form-control" [(ngModel)]="confirmPassword">
+    <div class="modal-body">
+      <div class="mb-3">
+        <label>Ancien mot de passe</label>
+        <input type="password" class="form-control" [(ngModel)]="oldPassword">
+      </div>
+      <div class="mb-3">
+        <label>Nouveau mot de passe</label>
+        <input type="password" class="form-control" [(ngModel)]="newPassword">
+      </div>
+      <div class="mb-3">
+        <label>Confirmer le nouveau mot de passe</label>
+        <input type="password" class="form-control" [(ngModel)]="confirmPassword">
+      </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
-    <button type="button" class="btn btn-primary" (click)="submitPasswordChange()">Changer</button>
-  </div>
-</ng-template>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+      <button type="button" class="btn btn-primary" (click)="submitPasswordChange()">Changer</button>
+    </div>
+  </ng-template>
