@@ -7,6 +7,9 @@ import { Equipement } from '../models/Equipement';
   providedIn: 'root'
 })
 export class EquipementService {
+  getUrgentEquipements() {
+    throw new Error('Method not implemented.');
+  }
   private apiUrl = 'http://localhost:8089/auth/api/equipements'; 
 
   constructor(private http: HttpClient) {}
@@ -31,4 +34,8 @@ updateEquipement(equipement: Equipement): Observable<Equipement> {
   deleteEquipement(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+  getDerniersEquipementsEnMaintenance(): Observable<Equipement[]> {
+  return this.http.get<Equipement[]>(`${this.apiUrl}/maintenance-recente`);
+}
+
 }

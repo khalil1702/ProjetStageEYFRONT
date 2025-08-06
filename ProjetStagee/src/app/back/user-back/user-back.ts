@@ -22,12 +22,23 @@ export class UserBack implements OnInit {
   totalPages: number = 0;
   successMessage: string | null = null;
   errorMessage: string | null = null;
+  currentUser!: Utilisateur | null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    const userJson = localStorage.getItem('currentUser');
+    this.currentUser = userJson ? JSON.parse(userJson) : null;
+
+    if (this.currentUser?.role !== Role.ADMIN) {
+      // Optionnel : redirection ou affichage de message
+      this.errorMessage = "Accès refusé. Vous n'avez pas les droits nécessaires.";
+      return;
+    }
+
     this.loadUsers();
   }
+
 
   loadUsers(): void {
     this.authService.getAllUsers().pipe(
@@ -54,70 +65,70 @@ export class UserBack implements OnInit {
     const end = start + this.pageSize;
     this.paginatedUsers = this.users.slice(start, end);
   }
-accepterUtilisateur(user: Utilisateur): void {
-  this.authService.acceptUser(user.id).subscribe({
-    next: (message: string) => {
-      user.status = true; // ✅ Mise à jour locale immédiate
-      Swal.fire({
-        icon: 'success',
-        title: 'Succès',
-        text: message,
-        timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        position: 'top-end',
-        toast: true
-      });
-      // ❌ this.loadUsers(); -> on ne recharge pas la liste
-    },
-    error: (err) => {
-      let errorMsg = "Erreur lors de l'acceptation de l'utilisateur.";
-      if (err.error && typeof err.error === 'string') {
-        errorMsg = err.error;
+  accepterUtilisateur(user: Utilisateur): void {
+    this.authService.acceptUser(user.id).subscribe({
+      next: (message: string) => {
+        user.status = true; // ✅ Mise à jour locale immédiate
+        Swal.fire({
+          icon: 'success',
+          title: 'Succès',
+          text: message,
+          timer: 3000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          position: 'top-end',
+          toast: true
+        });
+        // ❌ this.loadUsers(); -> on ne recharge pas la liste
+      },
+      error: (err) => {
+        let errorMsg = "Erreur lors de l'acceptation de l'utilisateur.";
+        if (err.error && typeof err.error === 'string') {
+          errorMsg = err.error;
+        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: errorMsg,
+          confirmButtonText: 'OK'
+        });
       }
-      Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text: errorMsg,
-        confirmButtonText: 'OK'
-      });
-    }
-  });
-}
+    });
+  }
 
 
-rejeterUtilisateur(id: number): void {
-  const reason = prompt("Veuillez entrer la raison du refus :");
-  if (!reason) return;
+  rejeterUtilisateur(id: number): void {
+    const reason = prompt("Veuillez entrer la raison du refus :");
+    if (!reason) return;
 
-  this.authService.rejectUser(id, reason).subscribe({
-    next: (message: string) => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Succès',
-        text: message,
-        timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        position: 'top-end',
-        toast: true
-      });
-      this.loadUsers();
-    },
-    error: (err) => {
-      let errorMsg = "Erreur lors du rejet de l'utilisateur.";
-      if (err.error && typeof err.error === 'string') {
-        errorMsg = err.error;
+    this.authService.rejectUser(id, reason).subscribe({
+      next: (message: string) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Succès',
+          text: message,
+          timer: 3000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          position: 'top-end',
+          toast: true
+        });
+        this.loadUsers();
+      },
+      error: (err) => {
+        let errorMsg = "Erreur lors du rejet de l'utilisateur.";
+        if (err.error && typeof err.error === 'string') {
+          errorMsg = err.error;
+        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: errorMsg,
+          confirmButtonText: 'OK'
+        });
       }
-      Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text: errorMsg,
-        confirmButtonText: 'OK'
-      });
-    }
-  });
-}
+    });
+  }
 
 
 

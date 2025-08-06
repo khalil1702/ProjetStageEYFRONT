@@ -1,8 +1,6 @@
-// angular import
-import { Component, inject, output } from '@angular/core';
+import { Component, OnInit, inject, output } from '@angular/core';
 import { Location } from '@angular/common';
 
-// project import
 import { environment } from 'src/environments/environment';
 import { NavigationItem, NavigationItems } from '../navigation';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -10,15 +8,14 @@ import { NavGroupComponent } from './nav-group/nav-group.component';
 
 @Component({
   selector: 'app-nav-content',
+  standalone: true,
   imports: [SharedModule, NavGroupComponent],
   templateUrl: './nav-content.component.html',
   styleUrls: ['./nav-content.component.scss']
 })
-export class NavContentComponent {
+export class NavContentComponent implements OnInit {
   private location = inject(Location);
 
-  // public method
-  // version
   title = 'Demo application for version numbering';
   currentApplicationVersion = environment.appVersion;
 
@@ -28,10 +25,37 @@ export class NavContentComponent {
 
   NavCollapsedMob = output();
 
-  // constructor
-  constructor() {
-    this.navigations = NavigationItems;
+  ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('currentUser')!); // 👈 Assure-toi que la clé est bien "currentUser"
+    const role = user?.role?.toString().toUpperCase();
+
+    console.log('Utilisateur connecté :', user);
+    console.log('Rôle détecté :', role);
+
+    this.navigations = this.filterByRole(NavigationItems, role);
   }
+
+  filterByRole(items: NavigationItem[], role: string): NavigationItem[] {
+    return items
+      .map(item => {
+        if (item.children) {
+          const filteredChildren = this.filterByRole(item.children, role);
+          if (filteredChildren.length === 0) {
+            return null; // 👈 Supprimer le groupe s'il n’a aucun enfant visible
+          }
+          return { ...item, children: filteredChildren };
+        }
+
+        // Si aucun roles défini, visible par tous
+        if (!item.roles || item.roles.includes(role)) {
+          return item;
+        }
+
+        return null;
+      })
+      .filter(item => item !== null) as NavigationItem[];
+  }
+
 
   fireOutClick() {
     let current_url = this.location.path();

@@ -1,3 +1,7 @@
+<div *ngIf="currentUser?.role !== 'ADMIN'" class="alert alert-danger mt-5 text-center">
+    <h4>Accès refusé</h4>
+    <p>Vous n'avez pas les droits nécessaires pour consulter cette page.</p>
+</div>
 <!-- Messages de succès / erreur -->
 <div *ngIf="successMessage || errorMessage" class="alert-container mb-3">
     <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -67,3 +71,9 @@
         </ul>
     </nav>
 </div>
+<ng-template #accessDenied>
+    <div class="alert alert-danger text-center mt-5">
+        <h4>Accès refusé</h4>
+        <p>Vous n’avez pas les droits nécessaires pour voir cette page.</p>
+    </div>
+</ng-template>

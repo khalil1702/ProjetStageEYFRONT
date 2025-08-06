@@ -11,6 +11,7 @@ export interface NavigationItem {
   external?: boolean;
   target?: boolean;
   breadcrumbs?: boolean;
+  roles?: string[]; // Nouvelle propriété pour les rôles autorisés
   children?: NavigationItem[];
 }
 
@@ -95,10 +96,13 @@ export const NavigationItems: NavigationItem[] = [
         id: 'liste-utilisateurs',
         title: 'Gestion des Utilisateurs',
         type: 'item',
-        url: '/listeusers', // URL originale conservée
+        url: '/listeusers',
         classes: 'nav-item',
-        icon: 'feather icon-user-check'
+        icon: 'feather icon-user-check',
+        roles: ['ADMIN'] // 👈 ICI
       }
     ]
-  },
+  }
+
+
 ];

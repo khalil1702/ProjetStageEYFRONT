@@ -4,6 +4,8 @@ import { NgbDropdownModule, NgbDropdownConfig, NgbModal } from '@ng-bootstrap/ng
 import { Role, Utilisateur } from 'src/app/models/Utilisateur';
 import { AuthService } from 'src/app/services/authService';
 import { FormsModule } from '@angular/forms';
+import { EquipementService } from 'src/app/services/equipement';
+import { Equipement } from 'src/app/models/Equipement';
 
 @Component({
   selector: 'app-nav-right',
@@ -15,20 +17,17 @@ import { FormsModule } from '@angular/forms';
 })
 export class NavRightComponent implements OnInit {
   user!: Utilisateur | null;
+  notifications: Notification[] = [];
 
-  // Pour le modal
+  // Anciennes méthodes conservées
   @ViewChild('changePasswordModal') changePasswordModal!: TemplateRef<any>;
   oldPassword: string = '';
   newPassword: string = '';
   confirmPassword: string = '';
-  notifications = [
-    { message: 'Maintenance urgente pour MRI-3001', date: new Date() },
-    { message: 'Intervention nécessaire sur scanner CT-45', date: new Date() },
-    // ... peut être rempli depuis une API aussi
-  ];
 
   constructor(
     config: NgbDropdownConfig,
+    private equipementService: EquipementService,
     private modalService: NgbModal,
     private authService: AuthService
   ) {
@@ -37,10 +36,11 @@ export class NavRightComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const userJson = localStorage.getItem('currentUser');
-    this.user = userJson ? JSON.parse(userJson) : null;
+    this.loadUser();
+    this.loadNotifications();
   }
 
+  // METHODES ORIGINALES (conservées inchangées)
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
@@ -84,4 +84,54 @@ export class NavRightComponent implements OnInit {
       }
     });
   }
+
+  // NOUVELLES METHODES POUR LES NOTIFICATIONS
+  private loadUser(): void {
+    const userJson = localStorage.getItem('currentUser');
+    this.user = userJson ? JSON.parse(userJson) : null;
+  }
+
+  private loadNotifications(): void {
+    this.equipementService.getDerniersEquipementsEnMaintenance().subscribe({
+      next: (equipements: Equipement[]) => {
+        this.notifications = equipements.map(e => ({
+          message: `Maintenance urgente : ${e.nom}`,
+          description: `Type: ${e.type} | Localisation: ${e.localisation}`,
+          date: new Date(e.dateProchaineMaintenance),
+          read: false
+        }));
+      },
+      error: (err) => {
+        console.error("Erreur lors du chargement des notifications :", err);
+      }
+    });
+  }
+
+// Méthodes du composant
+markAsRead(notification: any, event: Event): void {
+  event.stopPropagation();
+  notification.read = true;
+}
+
+markAllAsRead(event: Event): void {
+  event.stopPropagation();
+  this.notifications.forEach(n => n.read = true);
+}
+
+clearAllNotifications(event: Event): void {
+  event.stopPropagation();
+  this.notifications = [];
+}
+
+hasUnread(): boolean {
+  return this.notifications.some(n => !n.read);
+}
+}
+
+
+interface Notification {
+  message: string;
+  description?: string;
+  date: Date;
+  read: boolean;
 }
