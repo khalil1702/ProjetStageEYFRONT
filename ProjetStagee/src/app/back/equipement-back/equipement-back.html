@@ -8,12 +8,15 @@
           <i class="fas fa-server me-2"></i>Gestion des équipements
         </h3>
         <div>
-          <button class="btn btn-light me-2" (click)="openModal()">
+          <button class="btn btn-light me-2" (click)="openModal()" *ngIf="canAddEquipement()">
             <i class="fas fa-plus me-1"></i> Ajouter un équipement
           </button>
-          <button class="btn btn-light me-2" [disabled]="!selectedEquipement" (click)="openInterventionModal()">
+
+          <button class="btn btn-light me-2" [disabled]="!selectedEquipement" (click)="openInterventionModal()"
+            *ngIf="canAddIntervention()">
             <i class="fas fa-plus me-1"></i> Intervention
           </button>
+
         </div>
       </div>
     </div>
@@ -60,7 +63,7 @@
               <th>Date d'acquisition</th>
               <th>Mise en service</th>
               <th>Prochaine maintenance</th>
-              <th>Actions</th>
+              <th *ngIf="canSeeActions()">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -94,18 +97,21 @@
                 </span>
               </td>
 
-              <td>
+              <td *ngIf="canSeeActions()">
                 <div class="btn-group">
-                  <button class="btn btn-sm btn-outline-primary" (click)="editEquipement(e); $event.stopPropagation()"
-                    title="Modifier">
+                  <button *ngIf="canEditEquipement()" class="btn btn-sm btn-outline-primary"
+                    (click)="editEquipement(e); $event.stopPropagation()" title="Modifier">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-danger"
+
+                  <button *ngIf="canDeleteEquipement()" class="btn btn-sm btn-outline-danger"
                     (click)="deleteEquipement(e.id); $event.stopPropagation()" title="Supprimer">
                     <i class="fas fa-trash-alt"></i>
                   </button>
                 </div>
               </td>
+
+
             </tr>
 
             <tr *ngIf="filteredEquipements.length === 0">

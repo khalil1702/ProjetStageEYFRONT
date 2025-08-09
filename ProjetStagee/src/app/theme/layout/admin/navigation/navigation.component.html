@@ -1,6 +1,14 @@
 <nav>
-  <div class="navbar-wrapper">
+  <div class="navbar-wrapper position-relative">
+    <!-- Logo + contenu -->
     <app-nav-logo [navCollapsed]="navCollapsed" (NavCollapse)="navCollapse()" class="navbar-brand header-logo" />
     <app-nav-content (NavCollapsedMob)="navCollapseMob()" class="scroll-div w-100" />
+  </div>
+
+  <!-- Bouton de déconnexion stylisé -->
+  <div class="logout-button-container">
+    <button class="logout-button" (click)="logout()">
+      <i class="feather icon-log-out"></i> Déconnexion
+    </button>
   </div>
 </nav>

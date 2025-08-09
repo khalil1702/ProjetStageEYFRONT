@@ -27,6 +27,8 @@ export class EquipementBack implements OnInit {
   itemsPerPage: number = 10;
   sortDirection: { [key: string]: 'asc' | 'desc' } = {};
   selectedEquipement: Equipement | null = null;
+  userRole: string = '';
+
 
   // **Nouveau** pour intervention
   interventionForm!: FormGroup;
@@ -44,6 +46,8 @@ export class EquipementBack implements OnInit {
     if (userJson) {
       const user = JSON.parse(userJson);
       this.currentUserId = user.id;
+      this.userRole = user.role; // ⬅️ récupère le rôle
+
     }
 
     this.loadEquipements();
@@ -69,6 +73,24 @@ export class EquipementBack implements OnInit {
       description: ['', Validators.required],
       typeIntervention: ['', Validators.required],
     });
+  }
+  canAddEquipement(): boolean {
+    return this.userRole === 'ADMIN' || this.userRole === 'CHEF_SERVICE_MAGASIN';
+  }
+
+  canEditEquipement(): boolean {
+    return this.userRole === 'ADMIN' || this.userRole === 'CHEF_SERVICE_MAGASIN';
+  }
+
+  canDeleteEquipement(): boolean {
+    return this.userRole === 'ADMIN' || this.userRole === 'CHEF_SERVICE_MAGASIN';
+  }
+
+  canAddIntervention(): boolean {
+    return ['ADMIN', 'TECHNICIEN_MAINTENANCE', 'CHEF_SERVICE_MAINTENANCE'].includes(this.userRole);
+  }
+  canSeeActions(): boolean {
+    return this.canEditEquipement() || this.canDeleteEquipement();
   }
 
   loadEquipements(): void {

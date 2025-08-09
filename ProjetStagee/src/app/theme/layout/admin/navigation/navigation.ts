@@ -29,7 +29,9 @@ export const NavigationItems: NavigationItem[] = [
         url: '/dashboardd', // Gardé tel quel comme dans votre original
         icon: 'feather icon-pie-chart',
         classes: 'nav-item',
-        breadcrumbs: true
+        breadcrumbs: true,
+        roles: ['ADMIN', 'CHEF_SERVICE_MAINTENANCE', 'CHEF_SERVICE_HOSPITALIER', 'CHEF_SERVICE_MAGASIN'] // ✅ AJOUTÉ
+
       }
     ]
   },
@@ -47,6 +49,7 @@ export const NavigationItems: NavigationItem[] = [
         url: '/equipements', // URL originale conservée
         classes: 'nav-item',
         icon: 'feather icon-server'
+
       }
     ]
   },
@@ -63,7 +66,9 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         url: '/interventionsUrgente',
         classes: 'nav-item text-danger fw-bold',
-        icon: 'feather icon-alert-triangle'
+        icon: 'feather icon-alert-triangle',
+        roles: ['ADMIN', 'TECHNICIEN_MAINTENANCE', 'CHEF_SERVICE_MAINTENANCE']
+
       }
     ]
   },
@@ -80,7 +85,9 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         url: '/interventions', // URL originale conservée
         classes: 'nav-item',
-        icon: 'feather icon-activity'
+        icon: 'feather icon-activity',
+        roles: ['ADMIN', 'TECHNICIEN_MAINTENANCE', 'CHEF_SERVICE_MAINTENANCE']
+
       }
     ]
   },

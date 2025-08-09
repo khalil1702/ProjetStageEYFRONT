@@ -1,61 +1,57 @@
 <ul class="navbar-nav ms-auto d-flex align-items-center">
-<!-- Notifications -->
-<li class="nav-item notifications-dropdown" ngbDropdown>
-  <a class="nav-link position-relative" ngbDropdownToggle aria-label="Notifications">
-    <i class="feather icon-bell"></i>
-    <span *ngIf="notifications.length > 0" class="badge bg-danger rounded-circle pulse">
-      {{ notifications.length > 9 ? '9+' : notifications.length }}
-      <span *ngIf="hasUnread()" class="unread-dot"></span>
-    </span>
-  </a>
-  <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end p-0 notification-menu">
-    <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
-      <span class="fw-bold">Notifications</span>
-      <div>
-        <span *ngIf="notifications.length > 0" class="badge bg-primary rounded-pill me-2">
-          {{ notifications.length }}
-        </span>
-        <button *ngIf="hasUnread() && notifications.length > 0" 
-                class="btn btn-sm btn-outline-primary py-0 px-2"
-                (click)="markAllAsRead($event)">
-          Tout marquer comme lu
-        </button>
-      </div>
-    </div>
-    <div class="notification-container">
-      <div *ngIf="notifications.length === 0" class="p-3 text-muted text-center">
-        <i class="feather icon-bell-off d-block fs-4 mb-2"></i>
-        Aucune nouvelle notification
-      </div>
-      <div *ngFor="let notif of notifications" 
-           class="dropdown-item small py-2 px-3 notification-item"
-           [class.unread]="!notif.read"
-           (click)="markAsRead(notif, $event)">
-        <div class="d-flex justify-content-between align-items-start">
-          <div class="d-flex">
-            <i class="feather icon-alert-triangle text-warning me-2 mt-1"></i>
-            <div>
-              <div class="fw-medium">{{ notif.message }}</div>
-              <small class="text-muted d-block mt-1">{{ notif.description || '' }}</small>
-            </div>
-          </div>
-          <small class="text-muted text-nowrap ms-2">{{ notif.date | date:'short' }}</small>
+  <!-- Notifications -->
+  <li class="nav-item notifications-dropdown" ngbDropdown>
+    <a class="nav-link position-relative" ngbDropdownToggle aria-label="Notifications">
+      <i class="feather icon-bell"></i>
+      <span *ngIf="notifications.length > 0" class="badge bg-danger rounded-circle pulse">
+        {{ notifications.length > 9 ? '9+' : notifications.length }}
+        <span *ngIf="hasUnread()" class="unread-dot"></span>
+      </span>
+    </a>
+    <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end p-0 notification-menu">
+      <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
+        <span class="fw-bold">Notifications</span>
+        <div>
+          <span *ngIf="notifications.length > 0" class="badge bg-primary rounded-pill me-2">
+            {{ notifications.length }}
+          </span>
+          <button *ngIf="hasUnread() && notifications.length > 0" class="btn btn-sm btn-outline-primary py-0 px-2"
+            (click)="markAllAsRead($event)">
+            Tout marquer comme lu
+          </button>
         </div>
       </div>
+      <div class="notification-container">
+        <div *ngIf="notifications.length === 0" class="p-3 text-muted text-center">
+          <i class="feather icon-bell-off d-block fs-4 mb-2"></i>
+          Aucune nouvelle notification
+        </div>
+        <div *ngFor="let notif of notifications" class="dropdown-item small py-2 px-3 notification-item"
+          [class.unread]="!notif.read" (click)="markAsRead(notif, $event)">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex">
+              <i class="feather icon-alert-triangle text-warning me-2 mt-1"></i>
+              <div>
+                <div class="fw-medium">{{ notif.message }}</div>
+                <small class="text-muted d-block mt-1">{{ notif.description || '' }}</small>
+              </div>
+            </div>
+            <small class="text-muted text-nowrap ms-2">{{ notif.date | date:'short' }}</small>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-footer text-center p-2 border-top bg-light d-flex justify-content-between">
+        <button *ngIf="notifications.length > 0" class="btn btn-sm btn-link text-danger"
+          (click)="clearAllNotifications($event)">
+          <i class="feather icon-trash-2 me-1"></i> Tout effacer
+        </button>
+        <a href="/interventionsUrgente" class="text-primary small fw-medium">
+          Voir toutes les interventions urgentes
+          <i class="feather icon-chevron-right ms-1"></i>
+        </a>
+      </div>
     </div>
-    <div class="dropdown-footer text-center p-2 border-top bg-light d-flex justify-content-between">
-      <button *ngIf="notifications.length > 0" 
-              class="btn btn-sm btn-link text-danger"
-              (click)="clearAllNotifications($event)">
-        <i class="feather icon-trash-2 me-1"></i> Tout effacer
-      </button>
-      <a href="/interventionsUrgente" class="text-primary small fw-medium">
-        Voir toutes les interventions urgentes
-        <i class="feather icon-chevron-right ms-1"></i>
-      </a>
-    </div>
-  </div>
-</li>
+  </li>
   <li class="nav-item" ngbDropdown>
     <a class="nav-link dropdown-toggle" ngbDropdownToggle>
       <i class="feather icon-user"></i>
@@ -89,6 +85,10 @@
         <li>
           <hr class="dropdown-divider">
         </li>
+        <li class="dropdown-item" (click)="openEditProfileModal()">
+          <i class="feather icon-edit me-2"></i>
+          <span>Modifier le profil</span>
+        </li>
 
         <li class="dropdown-item" (click)="openChangePasswordModal()">
           <i class="feather icon-lock me-2"></i>
@@ -104,22 +104,95 @@
       <h5 class="modal-title">Changer le mot de passe</h5>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
+    <form #passwordForm="ngForm" novalidate>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label>Ancien mot de passe</label>
+          <input type="password" class="form-control" [(ngModel)]="oldPassword">
+        </div>
+        <div class="mb-3">
+          <label>Nouveau mot de passe</label>
+          <input type="password" class="form-control" [(ngModel)]="newPassword" name="newPassword" #newPass="ngModel"
+            required minlength="6">
+          <div *ngIf="newPass.invalid && (newPass.dirty || newPass.touched)" class="text-danger">
+            <small *ngIf="newPass.errors?.['required']">Le nouveau mot de passe est obligatoire.</small>
+            <small *ngIf="newPass.errors?.['minlength']">Minimum 6 caractères.</small>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label>Confirmer le nouveau mot de passe</label>
+          <input type="password" class="form-control" [(ngModel)]="confirmPassword" name="confirmPassword"
+            #confirmPass="ngModel" required minlength="6">
+          <div *ngIf="confirmPass.invalid && (confirmPass.dirty || confirmPass.touched)" class="text-danger">
+            <small *ngIf="confirmPass.errors?.['required']">La confirmation est obligatoire.</small>
+            <small *ngIf="confirmPass.errors?.['minlength']">Minimum 6 caractères.</small>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+        <button type="button" class="btn btn-primary" (click)="submitPasswordChange(passwordForm)"
+          [disabled]="passwordForm.invalid">
+          Changer
+        </button>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #editProfileModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Modifier le profil</h5>
+      <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+    </div>
     <div class="modal-body">
-      <div class="mb-3">
-        <label>Ancien mot de passe</label>
-        <input type="password" class="form-control" [(ngModel)]="oldPassword">
-      </div>
-      <div class="mb-3">
-        <label>Nouveau mot de passe</label>
-        <input type="password" class="form-control" [(ngModel)]="newPassword">
-      </div>
-      <div class="mb-3">
-        <label>Confirmer le nouveau mot de passe</label>
-        <input type="password" class="form-control" [(ngModel)]="confirmPassword">
-      </div>
+      <form #editProfileForm="ngForm">
+        <div class="mb-3">
+          <div class="mb-3">
+
+            <div *ngIf="editableUser.image" class="mt-2">
+              <p>Image actuelle :</p>
+              <img [src]="editableUser.image" alt="Image utilisateur"
+                style="max-width: 150px; max-height: 150px; object-fit: contain;">
+            </div>
+
+            <label class="mt-3">Ou choisir une nouvelle image :</label>
+            <input type="file" (change)="onFileSelected($event)">
+          </div>
+
+          <label>CIN</label>
+          <input type="text" class="form-control" [(ngModel)]="editableUser.cin" name="cin" #cin="ngModel" required
+            pattern="^[0-9]{8}$">
+          <div *ngIf="cin.invalid && (cin.dirty || cin.touched)" class="text-danger">
+            <small *ngIf="cin.errors?.['required']">Le CIN est obligatoire.</small>
+            <small *ngIf="cin.errors?.['pattern']">Le CIN doit contenir exactement 8 chiffres.</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Nom</label>
+          <input type="text" class="form-control" [(ngModel)]="editableUser.nom" name="nom" #nom="ngModel" required
+            minlength="2">
+          <div *ngIf="nom.invalid && (nom.dirty || nom.touched)" class="text-danger">
+            <small *ngIf="nom.errors?.['required']">Le nom est obligatoire.</small>
+            <small *ngIf="nom.errors?.['minlength']">Le nom doit contenir au moins 2 caractères.</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Email</label>
+          <input type="email" class="form-control" [(ngModel)]="editableUser.email" name="email" #email="ngModel"
+            required email>
+          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+            <small *ngIf="email.errors?.['required']">L'email est obligatoire.</small>
+            <small *ngIf="email.errors?.['email']">Format email invalide.</small>
+          </div>
+        </div>
+
+
+      </form>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
-      <button type="button" class="btn btn-primary" (click)="submitPasswordChange()">Changer</button>
+      <button type="button" class="btn btn-primary" (click)="updateProfile()">Enregistrer</button>
     </div>
   </ng-template>

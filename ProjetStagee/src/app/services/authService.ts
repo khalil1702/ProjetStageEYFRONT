@@ -14,22 +14,22 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:8089/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-login(cin: string, password: string): Observable<any> {
-  return this.http.post<any>(this.apiUrl + '/login', { cin, password }).pipe(
-    tap(response => {
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('currentUser', JSON.stringify(response.user)); // 👈 ICI
-    })
-  );
-}
+  login(cin: string, password: string): Observable<any> {
+    return this.http.post<any>(this.apiUrl + '/login', { cin, password }).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('currentUser', JSON.stringify(response.user)); // 👈 ICI
+      })
+    );
+  }
 
 
 
-getAllUsers(): Observable<Utilisateur[]> {
-  return this.http.get<Utilisateur[]>('http://localhost:8089/auth/users');
-}
+  getAllUsers(): Observable<Utilisateur[]> {
+    return this.http.get<Utilisateur[]>('http://localhost:8089/auth/users');
+  }
 
   // Méthode d'inscription
   register(user: Utilisateur): Observable<Utilisateur> {
@@ -50,17 +50,20 @@ getAllUsers(): Observable<Utilisateur[]> {
   isLoggedIn(): boolean {
     return this.getToken() !== null;
   }
-acceptUser(userId: number): Observable<string> {
-  return this.http.put(`${this.apiUrl}/accept/${userId}`, null, { responseType: 'text' });
-}
+  acceptUser(userId: number): Observable<string> {
+    return this.http.put(`${this.apiUrl}/accept/${userId}`, null, { responseType: 'text' });
+  }
 
-rejectUser(userId: number, reason: string): Observable<string> {
-  return this.http.put(`${this.apiUrl}/reject/${userId}?reason=${encodeURIComponent(reason)}`, null, { responseType: 'text' });
-}
+  rejectUser(userId: number, reason: string): Observable<string> {
+    return this.http.put(`${this.apiUrl}/reject/${userId}?reason=${encodeURIComponent(reason)}`, null, { responseType: 'text' });
+  }
 
-changePassword(userId: number, oldPassword: string, newPassword: string): Observable<string> {
-  const body = { oldPassword, newPassword };
-  return this.http.post<string>(`${this.apiUrl}/${userId}/change-password`, body, { responseType: 'text' as 'json' });
-}
+  changePassword(userId: number, oldPassword: string, newPassword: string): Observable<string> {
+    const body = { oldPassword, newPassword };
+    return this.http.post<string>(`${this.apiUrl}/${userId}/change-password`, body, { responseType: 'text' as 'json' });
+  }
+  updateUserProfile(userId: number, updatedData: any) {
+    return this.http.put<Utilisateur>(`${this.apiUrl}/update-profile/${userId}`, updatedData);
+  }
 
 }

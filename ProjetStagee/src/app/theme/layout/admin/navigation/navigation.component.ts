@@ -5,6 +5,7 @@ import { Component, output } from '@angular/core';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavLogoComponent } from './nav-logo/nav-logo.component';
 import { NavContentComponent } from './nav-content/nav-content.component';
+import { Router } from '@angular/router'; // en haut avec les imports
 
 @Component({
   selector: 'app-navigation',
@@ -21,7 +22,7 @@ export class NavigationComponent {
   windowWidth: number;
 
   // constructor
-  constructor() {
+  constructor(private router: Router) {
     this.windowWidth = window.innerWidth;
     this.navCollapsedMob = false;
   }
@@ -38,5 +39,9 @@ export class NavigationComponent {
     if (this.windowWidth < 992) {
       this.NavCollapsedMob.emit();
     }
+  }
+  logout(): void {
+    localStorage.removeItem('currentUser');
+    this.router.navigate(['/auth']);
   }
 }
