@@ -13,14 +13,18 @@
                 </div>
                 <h3 class="mb-4">Créer un compte</h3>
 
-                <form (ngSubmit)="onRegister()">
-                    <!-- Champ Photo de profil -->
+                <form #registerForm="ngForm" (ngSubmit)="onRegister()" novalidate>
+                    <!-- Photo de profil -->
                     <div class="form-group mb-3">
                         <label class="form-label d-block text-start mb-2">Photo de profil</label>
-                        <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)">
+                        <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)"
+                            required name="image" ngModel #image="ngModel">
+                        <div class="text-danger mt-1" *ngIf="image.invalid && (image.touched || image.dirty)">
+                            La photo de profil est obligatoire.
+                        </div>
                     </div>
 
-                    <!-- (facultatif) Aperçu de l’image -->
+                    <!-- Aperçu -->
                     <div *ngIf="user.image" class="mb-3">
                         <img [src]="user.image" alt="Aperçu"
                             style="max-width: 100px; max-height: 100px; border-radius: 5px;" />
@@ -38,35 +42,49 @@
                         <input type="hidden" [ngModel]="getFullCin()" name="cin">
                     </div>
 
-                    <!-- Champ Nom complet -->
+                    <!-- Nom complet -->
                     <div class="form-group mb-3">
                         <label class="form-label d-block text-start mb-2">Nom complet</label>
                         <input type="text" class="form-control" placeholder="Entrez votre nom complet"
-                            [(ngModel)]="user.nom" name="nom" required>
+                            [(ngModel)]="user.nom" name="nom" required #nom="ngModel">
+                        <div class="text-danger mt-1" *ngIf="nom.invalid && (nom.touched || nom.dirty)">
+                            Le nom complet est obligatoire.
+                        </div>
                     </div>
 
-                    <!-- Champ Email -->
+                    <!-- Email -->
                     <div class="form-group mb-3">
                         <label class="form-label d-block text-start mb-2">Email</label>
                         <input type="email" class="form-control" placeholder="Entrez votre email"
-                            [(ngModel)]="user.email" name="email" required>
+                            [(ngModel)]="user.email" name="email" required email #email="ngModel">
+                        <div class="text-danger mt-1" *ngIf="email.invalid && (email.touched || email.dirty)">
+                            <span *ngIf="email.errors?.['required']">L'email est obligatoire.</span>
+                            <span *ngIf="email.errors?.['email']">Format d'email invalide.</span>
+                        </div>
                     </div>
 
-                    <!-- Menu déroulant des rôles avec flèche personnalisée -->
+                    <!-- Rôle -->
                     <div class="form-group mb-3 custom-select-wrapper">
                         <label class="form-label d-block text-start mb-2">Rôle</label>
-                        <select class="form-control custom-select" [(ngModel)]="user.role" name="role" required>
+                        <select class="form-control custom-select" [(ngModel)]="user.role" name="role" required
+                            #role="ngModel">
                             <option value="" disabled hidden>Choisissez votre rôle</option>
                             <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
                         </select>
+                        <div class="text-danger mt-1" *ngIf="role.invalid && (role.touched || role.dirty)">
+                            Le rôle est obligatoire.
+                        </div>
                     </div>
 
                     <input type="hidden" [(ngModel)]="user.password" name="password">
 
-                    <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                    <!-- Bouton -->
+                    <button type="submit" class="btn btn-primary w-100 py-2 mb-3"
+                        [disabled]="registerForm.invalid || getFullCin().length !== 8">
                         <i class="feather icon-user-plus me-2"></i>S'inscrire
                     </button>
                 </form>
+
 
                 <p class="mb-0 text-muted">
                     Vous avez déjà un compte ?
